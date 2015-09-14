@@ -1,5 +1,7 @@
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -44,28 +46,45 @@ public class Main
 		num = key.nextInt();
 		for(int i=0;i<num;i++)
 		{
-			input[i] = in.readLine();
-			String[] temp = input[i].split(" ");
-			Universal.add(i);
-			for(String t:temp)
+			BufferedReader br = null;
+			try
 			{
-				if(table.containsKey(t))
+				File file = new File("src/file"+i+".txt");
+				br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+				input[i] = br.readLine();
+				Universal.add(i);
+				String[] temp = input[i].split(" ");
+				for(String t:temp)
 				{
-					table.get(t).add(i);
-				}
-				else
-				{
-					Set<Integer> temp2 = new TreeSet<Integer>();
-					temp2.add(i);
-					table.put(t, temp2);
+					if(table.containsKey(t))
+					{
+						table.get(t).add(i);
+					}
+					else
+					{
+						Set<Integer> temp2 = new TreeSet<Integer>();
+						temp2.add(i);
+						table.put(t, temp2);
+					}
 				}
 			}
+			catch(Exception e)
+			{
+				System.out.println("File Not Found");
+				e.printStackTrace();
+			}
+			finally
+			{
+				br.close();
+			}
 		}
+		System.out.println("Created Inverted Table:");
 		for(String temp: table.keySet())
 		{
 			System.out.println(temp+"-->"+table.get(temp).toString());
 		}
 		int no;
+		System.out.println("Enter the no. of search querys:");
 		no = key.nextInt();
 		while(no>0)
 		{
@@ -122,7 +141,6 @@ public class Main
 				}
 			}
 			System.out.println(intstk.pop().toString());
-			key.close();
 		}
 	}
 }
